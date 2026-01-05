@@ -31,6 +31,23 @@
 $ npm install
 ```
 
+## Database Setup
+
+```bash
+# Run migrations
+$ npm run migration:run
+
+# Seed initial data (creates admin user, roles, and menus)
+$ npm run seed:run
+```
+
+### Demo Admin Credentials
+
+After running the seed script, you can login with:
+- **Username:** `admin`
+- **Password:** `admin123`
+- **Email:** `admin@example.com`
+
 ## Compile and run the project
 
 ```bash
