@@ -3,6 +3,9 @@
 /node_modules
 /build
 
+# Swagger auto-generated files
+/swagger
+
 # Logs
 logs
 *.log
