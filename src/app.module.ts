@@ -10,8 +10,6 @@ import {
 } from 'nestjs-i18n';
 import * as path from 'path';
 import databaseConfig from './config/database.config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { AuthModule } from './modules/auth/auth.module';
 import { CenterUsersModule } from './modules/center-users/center-users.module';
 import { RolesModule } from './modules/roles/roles.module';
@@ -52,9 +50,8 @@ import { RolesGuard } from './common/guards/roles.guard';
     RolesModule,
     MenusModule,
   ],
-  controllers: [AppController],
+  controllers: [],
   providers: [
-    AppService,
     // Apply JWT guard globally
     {
       provide: APP_GUARD,
