@@ -2,7 +2,9 @@ import { Controller, Get } from '@nestjs/common';
 import { AppService } from './app.service';
 import { I18n, I18nContext } from 'nestjs-i18n';
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { Public } from './common/decorators/public.decorator';
 
+@Public()
 @ApiTags('admin')
 @Controller()
 export class AppController {

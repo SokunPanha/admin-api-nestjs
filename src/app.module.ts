@@ -1,11 +1,38 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_GUARD } from '@nestjs/core';
+import {
+  I18nModule,
+  AcceptLanguageResolver,
+  QueryResolver,
+  HeaderResolver,
+} from 'nestjs-i18n';
+import * as path from 'path';
+import databaseConfig from './config/database.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { I18nModule, AcceptLanguageResolver, QueryResolver, HeaderResolver } from 'nestjs-i18n';
-import * as path from 'path';
+import { AuthModule } from './modules/auth/auth.module';
+import { CenterUsersModule } from './modules/center-users/center-users.module';
+import { RolesModule } from './modules/roles/roles.module';
+import { MenusModule } from './modules/menus/menus.module';
+import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
+import { RolesGuard } from './common/guards/roles.guard';
 
 @Module({
   imports: [
+    // Configuration
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [databaseConfig],
+    }),
+
+    // Database
+    TypeOrmModule.forRootAsync({
+      useFactory: databaseConfig,
+    }),
+
+    // I18n
     I18nModule.forRoot({
       fallbackLanguage: 'en',
       loaderOptions: {
@@ -18,8 +45,26 @@ import * as path from 'path';
         new HeaderResolver(['x-lang']),
       ],
     }),
+
+    // Feature modules
+    AuthModule,
+    CenterUsersModule,
+    RolesModule,
+    MenusModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    // Apply JWT guard globally
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    // Apply Roles guard globally
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+  ],
 })
 export class AppModule {}
