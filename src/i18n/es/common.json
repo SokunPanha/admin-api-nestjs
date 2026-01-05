@@ -1,0 +1,10 @@
+{
+  "welcome": "Bienvenido",
+  "hello": "¡Hola {name}!",
+  "goodbye": "Adiós",
+  "language": "Idioma",
+  "success": "Éxito",
+  "error": "Error",
+  "notFound": "No encontrado",
+  "serverError": "Error interno del servidor"
+}
