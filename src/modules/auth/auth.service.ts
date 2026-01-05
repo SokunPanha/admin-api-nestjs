@@ -191,6 +191,87 @@ export class AuthService {
     };
   }
 
+  async getMenus(userId: number) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['user_roles', 'user_roles.role', 'user_roles.role.role_menus', 'user_roles.role.role_menus.menu'],
+    });
+
+    if (!user) {
+      throw new UnauthorizedException({
+        code: StatusCode.INVALID_CREDENTIALS,
+        message: 'User not found',
+      });
+    }
+
+    // Collect all unique menus from all user roles
+    const menuMap = new Map();
+    user.user_roles?.forEach(userRole => {
+      userRole.role?.role_menus?.forEach(roleMenu => {
+        const menu = roleMenu.menu;
+        if (menu && menu.status === 'active' && menu.is_visible) {
+          menuMap.set(menu.id, menu);
+        }
+      });
+    });
+
+    const allMenus = Array.from(menuMap.values());
+
+    // Build hierarchical structure
+    const menuTree = this.buildMenuTree(allMenus);
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: 'Menus retrieved successfully',
+      data: menuTree,
+    };
+  }
+
+  private buildMenuTree(menus: any[]): any[] {
+    const menuMap = new Map();
+    const rootMenus: any[] = [];
+
+    // First pass: create a map of all menus
+    menus.forEach(menu => {
+      menuMap.set(menu.id, {
+        id: menu.id,
+        code: menu.code,
+        labels: menu.labels,
+        icon: menu.icon,
+        route_path: menu.route_path,
+        sort_order: menu.sort_order,
+        parent_id: menu.parent_id,
+        children: [],
+      });
+    });
+
+    // Second pass: build the tree structure
+    menuMap.forEach(menu => {
+      if (menu.parent_id === null) {
+        rootMenus.push(menu);
+      } else {
+        const parent = menuMap.get(menu.parent_id);
+        if (parent) {
+          parent.children.push(menu);
+        }
+      }
+    });
+
+    // Sort menus by sort_order
+    const sortMenus = (menuList: any[]) => {
+      menuList.sort((a, b) => a.sort_order - b.sort_order);
+      menuList.forEach(menu => {
+        if (menu.children.length > 0) {
+          sortMenus(menu.children);
+        }
+      });
+    };
+
+    sortMenus(rootMenus);
+
+    return rootMenus;
+  }
+
   private async generateTokens(user: CenterUser) {
     const payload = {
       sub: user.id,

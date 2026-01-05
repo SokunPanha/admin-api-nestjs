@@ -55,4 +55,11 @@ export class AuthController {
   getProfile(@CurrentUser() user: CenterUser) {
     return this.authService.getProfile(user.id);
   }
+
+  @Post('menus')
+  @ApiBearerAuth('bearer')
+  @ApiOperation({ summary: 'Get user accessible menus in hierarchical structure' })
+  getMenus(@CurrentUser() user: CenterUser) {
+    return this.authService.getMenus(user.id);
+  }
 }
