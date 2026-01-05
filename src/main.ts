@@ -37,6 +37,17 @@ async function bootstrap() {
     .setDescription('Admin API documentation')
     .setVersion('1.0')
     .addTag('admin')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'Authorization',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'bearer',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

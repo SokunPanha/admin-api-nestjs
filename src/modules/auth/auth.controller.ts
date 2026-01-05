@@ -43,14 +43,14 @@ export class AuthController {
   }
 
   @Post('logout')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Logout and revoke refresh token' })
   logout(@CurrentUser() user: any, @Body('token_id') tokenId: number) {
     return this.authService.logout(user.id, tokenId);
   }
 
   @Post('profile')
-  @ApiBearerAuth()
+  @ApiBearerAuth('bearer')
   @ApiOperation({ summary: 'Get current user profile' })
   getProfile(@CurrentUser() user: CenterUser) {
     return this.authService.getProfile(user.id);

@@ -1,5 +1,5 @@
 import { Controller, Post, Body, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
@@ -7,6 +7,7 @@ import { ListRolesDto } from './dto/list-roles.dto';
 import { AssignMenusDto } from './dto/assign-menus.dto';
 
 @ApiTags('System Setting - Roles')
+@ApiBearerAuth('bearer')
 @Controller('admin/v1/system-setting/roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}

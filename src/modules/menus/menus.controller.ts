@@ -1,11 +1,12 @@
 import { Controller, Post, Body, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { MenusService } from './menus.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
 import { ListMenusDto } from './dto/list-menus.dto';
 
 @ApiTags('System Setting - Menus')
+@ApiBearerAuth('bearer')
 @Controller('admin/v1/system-setting/menus')
 export class MenusController {
   constructor(private readonly menusService: MenusService) {}

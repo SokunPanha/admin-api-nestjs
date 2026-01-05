@@ -1,5 +1,5 @@
 import { Controller, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { CenterUsersService } from './center-users.service';
 import { CreateCenterUserDto } from './dto/create-center-user.dto';
 import { UpdateCenterUserDto } from './dto/update-center-user.dto';
@@ -7,6 +7,7 @@ import { ListCenterUsersDto } from './dto/list-center-users.dto';
 import { AssignRolesDto } from './dto/assign-roles.dto';
 
 @ApiTags('System Setting - Center Users')
+@ApiBearerAuth('bearer')
 @Controller('admin/v1/system-setting/center-users')
 export class CenterUsersController {
   constructor(private readonly centerUsersService: CenterUsersService) {}
