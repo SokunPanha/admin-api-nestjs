@@ -8,9 +8,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, IsNull } from 'typeorm';
 import { Menu } from '../../database/entities/menu.entity';
 import { RoleMenu } from '../../database/entities/role-menu.entity';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
-import { ListMenusDto } from './dto/list-menus.dto';
+import { MenuCreateRequest } from './dto/create-menu.dto';
+import { MenuUpdateRequest } from './dto/update-menu.dto';
+import { MenuListRequest } from './dto/list-menus.dto';
 import {
   StatusCode,
   StatusMessages,
@@ -25,7 +25,7 @@ export class MenusService {
     private roleMenuRepository: Repository<RoleMenu>,
   ) {}
 
-  async create(createDto: CreateMenuDto) {
+  async create(createDto: MenuCreateRequest) {
     const existing = await this.menuRepository.findOne({
       where: { code: createDto.code },
     });
@@ -62,7 +62,7 @@ export class MenusService {
     };
   }
 
-  async list(listDto: ListMenusDto) {
+  async list(listDto: MenuListRequest) {
     const { page, page_size, keyword, sort, filters } = listDto;
     const skip = (page - 1) * page_size;
 
@@ -130,7 +130,7 @@ export class MenusService {
     };
   }
 
-  async update(id: number, updateDto: UpdateMenuDto) {
+  async update(id: number, updateDto: MenuUpdateRequest) {
     const menu = await this.menuRepository.findOne({ where: { id } });
 
     if (!menu) {
@@ -215,6 +215,27 @@ export class MenusService {
       code: StatusCode.SUCCESS,
       message: StatusMessages[StatusCode.SUCCESS],
       data: { id },
+    };
+  }
+
+  async updateStatus(id: number, status: string) {
+    const menu = await this.menuRepository.findOne({ where: { id } });
+
+    if (!menu) {
+      throw new NotFoundException({
+        code: StatusCode.NOT_FOUND,
+        message: StatusMessages[StatusCode.NOT_FOUND],
+        data: null,
+      });
+    }
+
+    menu.status = status as any;
+    await this.menuRepository.save(menu);
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: 'Status updated successfully',
+      data: menu,
     };
   }
 }

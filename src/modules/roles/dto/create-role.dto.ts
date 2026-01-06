@@ -2,7 +2,7 @@ import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { RoleStatus } from '../../../common/constants/entity-status';
 
-export class CreateRoleDto {
+export class RoleCreateRequest {
   @ApiProperty({ example: 'Admin' })
   @IsString()
   @MinLength(2)

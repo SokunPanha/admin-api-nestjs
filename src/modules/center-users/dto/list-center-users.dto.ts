@@ -47,7 +47,7 @@ export class ListCenterUsersFilters {
   created_at_to?: string;
 }
 
-export class ListCenterUsersDto extends PaginationDto {
+export class CenterUserListRequest extends PaginationDto {
   @ApiPropertyOptional({ type: ListCenterUsersFilters })
   @IsOptional()
   @Type(() => ListCenterUsersFilters)

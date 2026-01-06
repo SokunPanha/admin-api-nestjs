@@ -1,9 +1,18 @@
-import { Controller, Post, Body, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Post, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { MenusService } from './menus.service';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
-import { ListMenusDto } from './dto/list-menus.dto';
+import { MenuCreateRequest } from './dto/create-menu.dto';
+import { MenuUpdateRequest } from './dto/update-menu.dto';
+import { MenuDeleteRequest } from './dto/delete-menu.dto';
+import { MenuUpdateStatusRequest } from './dto/update-status.dto';
+import { MenuListRequest } from './dto/list-menus.dto';
+import {
+  MenuCreateResponse,
+  MenuListResponse,
+  MenuUpdateResponse,
+  MenuDeleteResponse,
+  MenuUpdateStatusResponse,
+} from './dto/menu-response.dto';
 
 @ApiTags('System Setting - Menus')
 @ApiBearerAuth('bearer')
@@ -13,34 +22,39 @@ export class MenusController {
 
   @Post('create')
   @ApiOperation({ summary: 'Create a new menu' })
-  create(@Body() createDto: CreateMenuDto) {
+  @ApiResponse({ status: 201, type: MenuCreateResponse })
+  create(@Body() createDto: MenuCreateRequest) {
     return this.menusService.create(createDto);
   }
 
   @Post('list')
   @ApiOperation({ summary: 'List menus with pagination and filters' })
-  list(@Body() listDto: ListMenusDto) {
+  @ApiResponse({ status: 200, type: MenuListResponse })
+  list(@Body() listDto: MenuListRequest) {
     return this.menusService.list(listDto);
-  }
-
-  @Post('find-by-id')
-  @ApiOperation({ summary: 'Find menu by ID' })
-  findById(@Body('id', ParseIntPipe) id: number) {
-    return this.menusService.findById(id);
   }
 
   @Post('update')
   @ApiOperation({ summary: 'Update menu' })
-  update(
-    @Body('id', ParseIntPipe) id: number,
-    @Body() updateDto: UpdateMenuDto,
-  ) {
-    return this.menusService.update(id, updateDto);
+  @ApiResponse({ status: 200, type: MenuUpdateResponse })
+  update(@Body() updateDto: MenuUpdateRequest) {
+    return this.menusService.update(updateDto.id, updateDto);
   }
 
   @Post('delete')
   @ApiOperation({ summary: 'Delete menu (soft delete)' })
-  delete(@Body('id', ParseIntPipe) id: number) {
-    return this.menusService.delete(id);
+  @ApiResponse({ status: 200, type: MenuDeleteResponse })
+  delete(@Body() deleteDto: MenuDeleteRequest) {
+    return this.menusService.delete(deleteDto.id);
+  }
+
+  @Post('update-status')
+  @ApiOperation({ summary: 'Update menu status' })
+  @ApiResponse({ status: 200, type: MenuUpdateStatusResponse })
+  updateStatus(@Body() updateStatusDto: MenuUpdateStatusRequest) {
+    return this.menusService.updateStatus(
+      updateStatusDto.id,
+      updateStatusDto.status,
+    );
   }
 }

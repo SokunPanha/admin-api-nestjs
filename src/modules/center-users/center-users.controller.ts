@@ -1,10 +1,20 @@
-import { Controller, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Post, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { CenterUsersService } from './center-users.service';
-import { CreateCenterUserDto } from './dto/create-center-user.dto';
-import { UpdateCenterUserDto } from './dto/update-center-user.dto';
-import { ListCenterUsersDto } from './dto/list-center-users.dto';
-import { AssignRolesDto } from './dto/assign-roles.dto';
+import { CenterUserCreateRequest } from './dto/create-center-user.dto';
+import { CenterUserUpdateRequest } from './dto/update-center-user.dto';
+import { CenterUserDeleteRequest } from './dto/delete-center-user.dto';
+import { CenterUserUpdateStatusRequest } from './dto/update-status.dto';
+import { CenterUserListRequest } from './dto/list-center-users.dto';
+import { CenterUserAssignRolesRequest } from './dto/assign-roles.dto';
+import {
+  CenterUserCreateResponse,
+  CenterUserListResponse,
+  CenterUserUpdateResponse,
+  CenterUserDeleteResponse,
+  CenterUserUpdateStatusResponse,
+  CenterUserAssignRolesResponse,
+} from './dto/center-user-response.dto';
 
 @ApiTags('System Setting - Center Users')
 @ApiBearerAuth('bearer')
@@ -14,40 +24,46 @@ export class CenterUsersController {
 
   @Post('create')
   @ApiOperation({ summary: 'Create a new center user' })
-  create(@Body() createDto: CreateCenterUserDto) {
+  @ApiResponse({ status: 201, type: CenterUserCreateResponse })
+  create(@Body() createDto: CenterUserCreateRequest) {
     return this.centerUsersService.create(createDto);
   }
 
   @Post('list')
   @ApiOperation({ summary: 'List center users with pagination and filters' })
-  list(@Body() listDto: ListCenterUsersDto) {
+  @ApiResponse({ status: 200, type: CenterUserListResponse })
+  list(@Body() listDto: CenterUserListRequest) {
     return this.centerUsersService.list(listDto);
-  }
-
-  @Post('find-by-id')
-  @ApiOperation({ summary: 'Find center user by ID' })
-  findById(@Body('id', ParseIntPipe) id: number) {
-    return this.centerUsersService.findById(id);
   }
 
   @Post('update')
   @ApiOperation({ summary: 'Update center user' })
-  update(
-    @Body('id', ParseIntPipe) id: number,
-    @Body() updateDto: UpdateCenterUserDto,
-  ) {
-    return this.centerUsersService.update(id, updateDto);
+  @ApiResponse({ status: 200, type: CenterUserUpdateResponse })
+  update(@Body() updateDto: CenterUserUpdateRequest) {
+    return this.centerUsersService.update(updateDto.id, updateDto);
   }
 
   @Post('delete')
   @ApiOperation({ summary: 'Delete center user (soft delete)' })
-  delete(@Body('id', ParseIntPipe) id: number) {
-    return this.centerUsersService.delete(id);
+  @ApiResponse({ status: 200, type: CenterUserDeleteResponse })
+  delete(@Body() deleteDto: CenterUserDeleteRequest) {
+    return this.centerUsersService.delete(deleteDto.id);
+  }
+
+  @Post('update-status')
+  @ApiOperation({ summary: 'Update center user status' })
+  @ApiResponse({ status: 200, type: CenterUserUpdateStatusResponse })
+  updateStatus(@Body() updateStatusDto: CenterUserUpdateStatusRequest) {
+    return this.centerUsersService.updateStatus(
+      updateStatusDto.id,
+      updateStatusDto.status,
+    );
   }
 
   @Post('assign-roles')
   @ApiOperation({ summary: 'Assign roles to center user' })
-  assignRoles(@Body() assignDto: AssignRolesDto) {
+  @ApiResponse({ status: 200, type: CenterUserAssignRolesResponse })
+  assignRoles(@Body() assignDto: CenterUserAssignRolesRequest) {
     return this.centerUsersService.assignRoles(assignDto);
   }
 }

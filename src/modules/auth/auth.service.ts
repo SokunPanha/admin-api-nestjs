@@ -6,8 +6,8 @@ import { ConfigService } from '@nestjs/config';
 import * as bcrypt from 'bcrypt';
 import { CenterUser } from '../../database/entities/center-user.entity';
 import { RefreshToken } from '../../database/entities/refresh-token.entity';
-import { RegisterDto } from './dto/register.dto';
-import { LoginDto } from './dto/login.dto';
+import { AuthRegisterRequest } from './dto/register.dto';
+import { AuthLoginRequest } from './dto/login.dto';
 import { UserStatus } from '../../common/constants/entity-status';
 import { StatusCode } from '../../common/constants/status-codes';
 
@@ -22,7 +22,7 @@ export class AuthService {
     private configService: ConfigService,
   ) {}
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: AuthRegisterRequest) {
     // Check if username already exists
     const existingUsername = await this.userRepository.findOne({
       where: { username: registerDto.username },
@@ -69,7 +69,7 @@ export class AuthService {
     };
   }
 
-  async login(loginDto: LoginDto) {
+  async login(loginDto: AuthLoginRequest) {
     // Find user by username
     const user = await this.userRepository.findOne({
       where: { username: loginDto.username },
@@ -171,7 +171,6 @@ export class AuthService {
   async getProfile(userId: number) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
-      relations: ['user_roles', 'user_roles.role', 'user_roles.role.role_menus', 'user_roles.role.role_menus.menu'],
     });
 
     if (!user) {
@@ -181,13 +180,22 @@ export class AuthService {
       });
     }
 
-    // Remove password from response
-    delete user.password_hash;
-
     return {
       code: StatusCode.SUCCESS,
       message: 'Profile retrieved successfully',
-      data: user,
+      data: {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        first_name: user.first_name,
+        last_name: user.last_name,
+        phone_number: user.phone_number,
+        avatar_url: user.avatar_url,
+        status: user.status,
+        last_login_at: user.last_login_at,
+        created_at: user.created_at,
+        updated_at: user.updated_at,
+      },
     };
   }
 

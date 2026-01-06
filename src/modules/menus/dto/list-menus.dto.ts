@@ -46,7 +46,7 @@ export class ListMenusFilters {
   created_at_to?: string;
 }
 
-export class ListMenusDto extends PaginationDto {
+export class MenuListRequest extends PaginationDto {
   @ApiPropertyOptional({ type: ListMenusFilters })
   @IsOptional()
   @Type(() => ListMenusFilters)

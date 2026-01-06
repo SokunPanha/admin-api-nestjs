@@ -1,10 +1,20 @@
-import { Controller, Post, Body, ParseIntPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { Controller, Post, Body } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
 import { RolesService } from './roles.service';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { ListRolesDto } from './dto/list-roles.dto';
-import { AssignMenusDto } from './dto/assign-menus.dto';
+import { RoleCreateRequest } from './dto/create-role.dto';
+import { RoleUpdateRequest } from './dto/update-role.dto';
+import { RoleDeleteRequest } from './dto/delete-role.dto';
+import { RoleUpdateStatusRequest } from './dto/update-status.dto';
+import { RoleListRequest } from './dto/list-roles.dto';
+import { RoleAssignMenusRequest } from './dto/assign-menus.dto';
+import {
+  RoleCreateResponse,
+  RoleListResponse,
+  RoleUpdateResponse,
+  RoleDeleteResponse,
+  RoleUpdateStatusResponse,
+  RoleAssignMenusResponse,
+} from './dto/role-response.dto';
 
 @ApiTags('System Setting - Roles')
 @ApiBearerAuth('bearer')
@@ -14,40 +24,46 @@ export class RolesController {
 
   @Post('create')
   @ApiOperation({ summary: 'Create a new role' })
-  create(@Body() createDto: CreateRoleDto) {
+  @ApiResponse({ status: 201, type: RoleCreateResponse })
+  create(@Body() createDto: RoleCreateRequest) {
     return this.rolesService.create(createDto);
   }
 
   @Post('list')
   @ApiOperation({ summary: 'List roles with pagination and filters' })
-  list(@Body() listDto: ListRolesDto) {
+  @ApiResponse({ status: 200, type: RoleListResponse })
+  list(@Body() listDto: RoleListRequest) {
     return this.rolesService.list(listDto);
-  }
-
-  @Post('find-by-id')
-  @ApiOperation({ summary: 'Find role by ID' })
-  findById(@Body('id', ParseIntPipe) id: number) {
-    return this.rolesService.findById(id);
   }
 
   @Post('update')
   @ApiOperation({ summary: 'Update role' })
-  update(
-    @Body('id', ParseIntPipe) id: number,
-    @Body() updateDto: UpdateRoleDto,
-  ) {
-    return this.rolesService.update(id, updateDto);
+  @ApiResponse({ status: 200, type: RoleUpdateResponse })
+  update(@Body() updateDto: RoleUpdateRequest) {
+    return this.rolesService.update(updateDto.id, updateDto);
   }
 
   @Post('delete')
   @ApiOperation({ summary: 'Delete role (soft delete)' })
-  delete(@Body('id', ParseIntPipe) id: number) {
-    return this.rolesService.delete(id);
+  @ApiResponse({ status: 200, type: RoleDeleteResponse })
+  delete(@Body() deleteDto: RoleDeleteRequest) {
+    return this.rolesService.delete(deleteDto.id);
+  }
+
+  @Post('update-status')
+  @ApiOperation({ summary: 'Update role status' })
+  @ApiResponse({ status: 200, type: RoleUpdateStatusResponse })
+  updateStatus(@Body() updateStatusDto: RoleUpdateStatusRequest) {
+    return this.rolesService.updateStatus(
+      updateStatusDto.id,
+      updateStatusDto.status,
+    );
   }
 
   @Post('assign-menus')
   @ApiOperation({ summary: 'Assign menus to role' })
-  assignMenus(@Body() assignDto: AssignMenusDto) {
+  @ApiResponse({ status: 200, type: RoleAssignMenusResponse })
+  assignMenus(@Body() assignDto: RoleAssignMenusRequest) {
     return this.rolesService.assignMenus(assignDto);
   }
 }

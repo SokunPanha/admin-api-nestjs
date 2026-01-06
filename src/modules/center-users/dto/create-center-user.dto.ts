@@ -8,7 +8,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { UserStatus } from '../../../common/constants/entity-status';
 
-export class CreateCenterUserDto {
+export class CenterUserCreateRequest {
   @ApiProperty({ example: 'john_doe' })
   @IsString()
   @MinLength(3)

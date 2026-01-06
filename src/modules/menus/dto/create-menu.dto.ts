@@ -11,7 +11,7 @@ import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { MenuStatus } from '../../../common/constants/entity-status';
 
-export class CreateMenuDto {
+export class MenuCreateRequest {
   @ApiPropertyOptional({ example: 1 })
   @IsOptional()
   @IsInt()

@@ -42,7 +42,7 @@ export class ListRolesFilters {
   created_at_to?: string;
 }
 
-export class ListRolesDto extends PaginationDto {
+export class RoleListRequest extends PaginationDto {
   @ApiPropertyOptional({ type: ListRolesFilters })
   @IsOptional()
   @Type(() => ListRolesFilters)

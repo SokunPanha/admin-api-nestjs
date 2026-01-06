@@ -9,10 +9,10 @@ import * as bcrypt from 'bcrypt';
 import { CenterUser } from '../../database/entities/center-user.entity';
 import { CenterUserRole } from '../../database/entities/center-user-role.entity';
 import { Role } from '../../database/entities/role.entity';
-import { CreateCenterUserDto } from './dto/create-center-user.dto';
-import { UpdateCenterUserDto } from './dto/update-center-user.dto';
-import { ListCenterUsersDto } from './dto/list-center-users.dto';
-import { AssignRolesDto } from './dto/assign-roles.dto';
+import { CenterUserCreateRequest } from './dto/create-center-user.dto';
+import { CenterUserUpdateRequest } from './dto/update-center-user.dto';
+import { CenterUserListRequest } from './dto/list-center-users.dto';
+import { CenterUserAssignRolesRequest } from './dto/assign-roles.dto';
 import {
   StatusCode,
   StatusMessages,
@@ -29,7 +29,7 @@ export class CenterUsersService {
     private roleRepository: Repository<Role>,
   ) {}
 
-  async create(createDto: CreateCenterUserDto) {
+  async create(createDto: CenterUserCreateRequest) {
     // Check if username or email already exists
     const existing = await this.centerUserRepository.findOne({
       where: [{ username: createDto.username }, { email: createDto.email }],
@@ -64,7 +64,7 @@ export class CenterUsersService {
     };
   }
 
-  async list(listDto: ListCenterUsersDto) {
+  async list(listDto: CenterUserListRequest) {
     const { page, page_size, keyword, sort, filters } = listDto;
     const skip = (page - 1) * page_size;
 
@@ -168,7 +168,7 @@ export class CenterUsersService {
     };
   }
 
-  async update(id: number, updateDto: UpdateCenterUserDto) {
+  async update(id: number, updateDto: CenterUserUpdateRequest) {
     const user = await this.centerUserRepository.findOne({ where: { id } });
 
     if (!user) {
@@ -229,7 +229,30 @@ export class CenterUsersService {
     };
   }
 
-  async assignRoles(assignDto: AssignRolesDto) {
+  async updateStatus(id: number, status: string) {
+    const user = await this.centerUserRepository.findOne({ where: { id } });
+
+    if (!user) {
+      throw new NotFoundException({
+        code: StatusCode.NOT_FOUND,
+        message: StatusMessages[StatusCode.NOT_FOUND],
+        data: null,
+      });
+    }
+
+    user.status = status as any;
+    await this.centerUserRepository.save(user);
+
+    delete user.password_hash;
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: 'Status updated successfully',
+      data: user,
+    };
+  }
+
+  async assignRoles(assignDto: CenterUserAssignRolesRequest) {
     const { user_id, role_ids } = assignDto;
 
     const user = await this.centerUserRepository.findOne({

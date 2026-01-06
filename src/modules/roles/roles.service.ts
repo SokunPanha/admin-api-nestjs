@@ -10,10 +10,10 @@ import { Role } from '../../database/entities/role.entity';
 import { RoleMenu } from '../../database/entities/role-menu.entity';
 import { Menu } from '../../database/entities/menu.entity';
 import { CenterUserRole } from '../../database/entities/center-user-role.entity';
-import { CreateRoleDto } from './dto/create-role.dto';
-import { UpdateRoleDto } from './dto/update-role.dto';
-import { ListRolesDto } from './dto/list-roles.dto';
-import { AssignMenusDto } from './dto/assign-menus.dto';
+import { RoleCreateRequest } from './dto/create-role.dto';
+import { RoleUpdateRequest } from './dto/update-role.dto';
+import { RoleListRequest } from './dto/list-roles.dto';
+import { RoleAssignMenusRequest } from './dto/assign-menus.dto';
 import {
   StatusCode,
   StatusMessages,
@@ -32,7 +32,7 @@ export class RolesService {
     private centerUserRoleRepository: Repository<CenterUserRole>,
   ) {}
 
-  async create(createDto: CreateRoleDto) {
+  async create(createDto: RoleCreateRequest) {
     const existing = await this.roleRepository.findOne({
       where: [{ name: createDto.name }, { code: createDto.code }],
     });
@@ -55,7 +55,7 @@ export class RolesService {
     };
   }
 
-  async list(listDto: ListRolesDto) {
+  async list(listDto: RoleListRequest) {
     const { page, page_size, keyword, sort, filters } = listDto;
     const skip = (page - 1) * page_size;
 
@@ -118,7 +118,7 @@ export class RolesService {
     };
   }
 
-  async update(id: number, updateDto: UpdateRoleDto) {
+  async update(id: number, updateDto: RoleUpdateRequest) {
     const role = await this.roleRepository.findOne({ where: { id } });
 
     if (!role) {
@@ -186,7 +186,28 @@ export class RolesService {
     };
   }
 
-  async assignMenus(assignDto: AssignMenusDto) {
+  async updateStatus(id: number, status: string) {
+    const role = await this.roleRepository.findOne({ where: { id } });
+
+    if (!role) {
+      throw new NotFoundException({
+        code: StatusCode.NOT_FOUND,
+        message: StatusMessages[StatusCode.NOT_FOUND],
+        data: null,
+      });
+    }
+
+    role.status = status as any;
+    await this.roleRepository.save(role);
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: 'Status updated successfully',
+      data: role,
+    };
+  }
+
+  async assignMenus(assignDto: RoleAssignMenusRequest) {
     const { role_id, menu_ids } = assignDto;
 
     const role = await this.roleRepository.findOne({ where: { id: role_id } });
