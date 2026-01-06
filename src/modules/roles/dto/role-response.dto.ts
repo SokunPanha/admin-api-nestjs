@@ -11,15 +11,35 @@ export class RoleCreateResponse {
   data: any;
 }
 
+export class RoleItem {
+  @ApiProperty({ example: 1 })
+  id: number;
+
+  @ApiProperty({ example: 'Admin' })
+  name: string;
+
+  @ApiProperty({ example: 'admin' })
+  code: string;
+
+  @ApiProperty({ example: 'Administrator role with full access' })
+  description: string | null;
+
+  @ApiProperty({ example: 'active' })
+  status: string;
+
+  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  created_at: Date;
+
+  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  updated_at: Date;
+}
+
 export class RoleListResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
+  @ApiProperty({ type: [RoleItem] })
+  items: RoleItem[];
 
-  @ApiProperty({ example: 'Success' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
+  @ApiProperty({ example: 50 })
+  total: number;
 }
 
 export class RoleUpdateResponse {

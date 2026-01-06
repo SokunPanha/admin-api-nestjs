@@ -26,7 +26,10 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   // Enable CORS
-  app.enableCors();
+  app.enableCors({
+    origin: 'http://localhost:3001',
+    credentials: true,
+  });
 
   // Set global API prefix (note: removed since routes already have admin/v1)
   // app.setGlobalPrefix('admin/v1');
