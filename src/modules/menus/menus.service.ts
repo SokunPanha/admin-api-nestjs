@@ -11,6 +11,7 @@ import { RoleMenu } from '../../database/entities/role-menu.entity';
 import { MenuCreateRequest } from './dto/create-menu.dto';
 import { MenuUpdateRequest } from './dto/update-menu.dto';
 import { MenuListRequest } from './dto/list-menus.dto';
+import { ParentMenuMasterdataRequest } from './dto/parent-menu-masterdata.dto';
 import {
   StatusCode,
   StatusMessages,
@@ -227,6 +228,32 @@ export class MenusService {
       code: StatusCode.SUCCESS,
       message: 'Status updated successfully',
       data: menu,
+    };
+  }
+
+  async getParentMenuMasterdata(request: ParentMenuMasterdataRequest) {
+    const queryBuilder = this.menuRepository
+      .createQueryBuilder('menu')
+      .where('menu.parent_id IS NULL');
+
+    if (request.status) {
+      queryBuilder.andWhere('menu.status = :status', { status: request.status });
+    }
+
+    queryBuilder.orderBy('menu.sort_order', 'ASC');
+
+    const menus = await queryBuilder.getMany();
+
+    const items = menus.map((menu) => ({
+      id: menu.id,
+      code: menu.code,
+      label: menu.labels?.en || menu.code,
+    }));
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: StatusMessages[StatusCode.SUCCESS],
+      data: { items },
     };
   }
 }

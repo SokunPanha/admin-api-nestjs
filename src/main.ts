@@ -31,8 +31,8 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // Set global API prefix (note: removed since routes already have admin/v1)
-  // app.setGlobalPrefix('admin/v1');
+  // Set global API prefix
+  app.setGlobalPrefix('admin/v1');
 
   // Swagger configuration
   const config = new DocumentBuilder()

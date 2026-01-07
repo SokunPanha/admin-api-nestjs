@@ -18,7 +18,7 @@ import {
 
 @ApiTags('System Setting - Roles')
 @ApiBearerAuth('bearer')
-@Controller('admin/v1/system-setting/roles')
+@Controller('system-setting/roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 

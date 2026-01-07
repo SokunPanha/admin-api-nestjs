@@ -7,6 +7,10 @@ import { MenuDeleteRequest } from './dto/delete-menu.dto';
 import { MenuUpdateStatusRequest } from './dto/update-status.dto';
 import { MenuListRequest } from './dto/list-menus.dto';
 import {
+  ParentMenuMasterdataRequest,
+  ParentMenuMasterdataResponse,
+} from './dto/parent-menu-masterdata.dto';
+import {
   MenuCreateResponse,
   MenuListResponse,
   MenuUpdateResponse,
@@ -16,7 +20,7 @@ import {
 
 @ApiTags('System Setting - Menus')
 @ApiBearerAuth('bearer')
-@Controller('admin/v1/system-setting/menus')
+@Controller('system-setting/menus')
 export class MenusController {
   constructor(private readonly menusService: MenusService) {}
 
@@ -56,5 +60,12 @@ export class MenusController {
       updateStatusDto.id,
       updateStatusDto.status,
     );
+  }
+
+  @Post('parent-menu/masterdata')
+  @ApiOperation({ summary: 'Get parent menu masterdata for dropdown' })
+  @ApiResponse({ status: 200, type: ParentMenuMasterdataResponse })
+  getParentMenuMasterdata(@Body() request: ParentMenuMasterdataRequest) {
+    return this.menusService.getParentMenuMasterdata(request);
   }
 }

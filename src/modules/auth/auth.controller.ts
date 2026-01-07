@@ -18,7 +18,7 @@ import { JwtRefreshAuthGuard } from '../../common/guards/jwt-refresh-auth.guard'
 import { CenterUser } from '../../database/entities/center-user.entity';
 
 @ApiTags('Authentication')
-@Controller('admin/v1/auth')
+@Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 

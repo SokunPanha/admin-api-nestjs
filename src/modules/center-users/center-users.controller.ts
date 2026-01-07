@@ -18,7 +18,7 @@ import {
 
 @ApiTags('System Setting - Center Users')
 @ApiBearerAuth('bearer')
-@Controller('admin/v1/system-setting/center-users')
+@Controller('system-setting/center-users')
 export class CenterUsersController {
   constructor(private readonly centerUsersService: CenterUsersService) {}
 
