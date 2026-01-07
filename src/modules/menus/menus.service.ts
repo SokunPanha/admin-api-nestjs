@@ -39,9 +39,12 @@ export class MenusService {
       });
     }
 
-    if (createDto.parent_id) {
+    // Convert parent_id = 0 to null for top-level menus
+    const parent_id = createDto.parent_id === 0 ? null : createDto.parent_id;
+
+    if (parent_id) {
       const parent = await this.menuRepository.findOne({
-        where: { id: createDto.parent_id },
+        where: { id: parent_id },
       });
 
       if (!parent) {
@@ -53,7 +56,10 @@ export class MenusService {
       }
     }
 
-    const menu = this.menuRepository.create(createDto);
+    const menu = this.menuRepository.create({
+      ...createDto,
+      parent_id,
+    });
     await this.menuRepository.save(menu);
 
     return {
@@ -147,8 +153,16 @@ export class MenusService {
       }
     }
 
-    if (updateDto.parent_id) {
-      if (updateDto.parent_id === id) {
+    // Convert parent_id = 0 to null for top-level menus
+    const parent_id =
+      updateDto.parent_id !== undefined
+        ? updateDto.parent_id === 0
+          ? null
+          : updateDto.parent_id
+        : undefined;
+
+    if (parent_id) {
+      if (parent_id === id) {
         throw new BadRequestException({
           code: StatusCode.INVALID_PARENT_MENU,
           message: 'Menu cannot be its own parent',
@@ -157,7 +171,7 @@ export class MenusService {
       }
 
       const parent = await this.menuRepository.findOne({
-        where: { id: updateDto.parent_id },
+        where: { id: parent_id },
       });
 
       if (!parent) {
@@ -169,7 +183,10 @@ export class MenusService {
       }
     }
 
-    Object.assign(menu, updateDto);
+    Object.assign(menu, {
+      ...updateDto,
+      ...(parent_id !== undefined && { parent_id }),
+    });
     await this.menuRepository.save(menu);
 
     return {

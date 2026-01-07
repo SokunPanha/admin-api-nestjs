@@ -1,4 +1,4 @@
-import { Entity, Column, Index, ManyToOne, OneToMany, JoinColumn } from 'typeorm';
+import { Entity, Column, Index, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { MenuStatus } from '../../common/constants/entity-status';
 import { RoleMenu } from './role-menu.entity';
@@ -31,9 +31,9 @@ export class Menu extends BaseEntity {
   is_visible: boolean;
 
   // Relations
-  @ManyToOne(() => Menu, (menu) => menu.children, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Menu, (menu) => menu.children)
   @JoinColumn({ name: 'parent_id' })
-  parent: Menu | null;
+  parent: Menu;
 
   @OneToMany(() => Menu, (menu) => menu.parent)
   children: Menu[];
