@@ -4,18 +4,19 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { MenuStatus } from '../../../common/constants/entity-status';
 
-export class ListMenusFilters {
-  @ApiPropertyOptional({ example: 1 })
+export class MenuListRequest extends PaginationDto {
+  @ApiPropertyOptional({ type: Number, example: 1 })
   @IsOptional()
+  @IsInt()
   @Type(() => Number)
   id?: number;
 
-  @ApiPropertyOptional({ example: 1, description: 'null for root menus' })
+  @ApiPropertyOptional({ type: Number, example: 1, description: 'null for root menus', nullable: true })
   @IsOptional()
   @Type(() => Number)
   parent_id?: number | null;
 
-  @ApiPropertyOptional({ example: 'dashboard' })
+  @ApiPropertyOptional({ type: String, example: 'dashboard' })
   @IsOptional()
   @IsString()
   code?: string;
@@ -25,30 +26,23 @@ export class ListMenusFilters {
   @IsEnum(MenuStatus)
   status?: MenuStatus;
 
-  @ApiPropertyOptional({ example: true })
+  @ApiPropertyOptional({ type: Boolean, example: true })
   @IsOptional()
   @Type(() => Boolean)
   is_visible?: boolean;
 
-  @ApiPropertyOptional({ example: '/dashboard' })
+  @ApiPropertyOptional({ type: String, example: '/dashboard' })
   @IsOptional()
   @IsString()
   route_path?: string;
 
-  @ApiPropertyOptional({ example: '2024-01-01T00:00:00Z' })
+  @ApiPropertyOptional({ type: String, example: '2024-01-01T00:00:00Z' })
   @IsOptional()
   @IsString()
   created_at_from?: string;
 
-  @ApiPropertyOptional({ example: '2024-12-31T23:59:59Z' })
+  @ApiPropertyOptional({ type: String, example: '2024-12-31T23:59:59Z' })
   @IsOptional()
   @IsString()
   created_at_to?: string;
-}
-
-export class MenuListRequest extends PaginationDto {
-  @ApiPropertyOptional({ type: ListMenusFilters })
-  @IsOptional()
-  @Type(() => ListMenusFilters)
-  declare filters?: ListMenusFilters;
 }

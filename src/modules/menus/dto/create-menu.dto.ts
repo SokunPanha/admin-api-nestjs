@@ -10,6 +10,7 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { MenuStatus } from '../../../common/constants/entity-status';
+import { MultiLanguageText } from '../../../common/types/multi-language.type';
 
 export class MenuCreateRequest {
   @ApiPropertyOptional({ example: 1 })
@@ -24,11 +25,11 @@ export class MenuCreateRequest {
   code: string;
 
   @ApiProperty({
-    example: { en: 'Dashboard', kh: 'ផ្ទាំងគ្រប់គ្រង' },
+    type: MultiLanguageText,
     description: 'Multi-language labels',
   })
   @IsObject()
-  labels: Record<string, string>;
+  labels: MultiLanguageText;
 
   @ApiPropertyOptional({ example: 'DashboardOutlined' })
   @IsOptional()

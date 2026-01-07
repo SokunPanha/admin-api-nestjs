@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MultiLanguageText } from '../../../common/types/multi-language.type';
 
 export class MenuCreateResponse {
   @ApiProperty({ example: 201 })
@@ -12,37 +13,37 @@ export class MenuCreateResponse {
 }
 
 export class MenuItem {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1, nullable: true })
   parent_id: number | null;
 
-  @ApiProperty({ example: 'dashboard' })
+  @ApiProperty({ type: String, example: 'dashboard' })
   code: string;
 
-  @ApiProperty({ example: { en: 'Dashboard', kh: 'ផ្ទាំងគ្រប់គ្រង' } })
-  labels: Record<string, string>;
+  @ApiProperty({ type: MultiLanguageText })
+  labels: MultiLanguageText;
 
-  @ApiProperty({ example: 'dashboard' })
+  @ApiProperty({ type: String, example: 'dashboard', nullable: true })
   icon: string | null;
 
-  @ApiProperty({ example: '/dashboard' })
+  @ApiProperty({ type: String, example: '/dashboard', nullable: true })
   route_path: string | null;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   sort_order: number;
 
-  @ApiProperty({ example: 'active' })
+  @ApiProperty({ type: String, example: 'active' })
   status: string;
 
-  @ApiProperty({ example: true })
+  @ApiProperty({ type: Boolean, example: true })
   is_visible: boolean;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({ type: Date, example: '2024-01-01T00:00:00.000Z' })
   created_at: Date;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({ type: Date, example: '2024-01-01T00:00:00.000Z' })
   updated_at: Date;
 }
 

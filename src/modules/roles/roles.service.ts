@@ -56,31 +56,22 @@ export class RolesService {
   }
 
   async list(listDto: RoleListRequest) {
-    const { page, page_size, keyword, sort, filters } = listDto;
+    const { page, page_size, sort, id, name, code, status, created_at_from, created_at_to, menu_ids } = listDto;
     const skip = (page - 1) * page_size;
 
     const queryBuilder = this.roleRepository.createQueryBuilder('role');
 
-    if (keyword) {
-      queryBuilder.andWhere(
-        '(role.name LIKE :keyword OR role.code LIKE :keyword OR role.description LIKE :keyword)',
-        { keyword: `%${keyword}%` },
-      );
+    if (id) queryBuilder.andWhere('role.id = :id', { id });
+    if (name) queryBuilder.andWhere('role.name LIKE :name', { name: `%${name}%` });
+    if (code) queryBuilder.andWhere('role.code LIKE :code', { code: `%${code}%` });
+    if (status) queryBuilder.andWhere('role.status = :status', { status });
+    if (created_at_from) queryBuilder.andWhere('role.created_at >= :from', { from: created_at_from });
+    if (created_at_to) queryBuilder.andWhere('role.created_at <= :to', { to: created_at_to });
+    if (menu_ids && menu_ids.length > 0) {
+      queryBuilder.innerJoin('role.role_menus', 'rm').andWhere('rm.menu_id IN (:...menuIds)', { menuIds: menu_ids });
     }
 
-    if (filters) {
-      if (filters.id) queryBuilder.andWhere('role.id = :id', { id: filters.id });
-      if (filters.name) queryBuilder.andWhere('role.name LIKE :name', { name: `%${filters.name}%` });
-      if (filters.code) queryBuilder.andWhere('role.code LIKE :code', { code: `%${filters.code}%` });
-      if (filters.status) queryBuilder.andWhere('role.status = :status', { status: filters.status });
-      if (filters.created_at_from) queryBuilder.andWhere('role.created_at >= :from', { from: filters.created_at_from });
-      if (filters.created_at_to) queryBuilder.andWhere('role.created_at <= :to', { to: filters.created_at_to });
-      if (filters.menu_ids && filters.menu_ids.length > 0) {
-        queryBuilder.innerJoin('role.role_menus', 'rm').andWhere('rm.menu_id IN (:...menuIds)', { menuIds: filters.menu_ids });
-      }
-    }
-
-    if (sort) {
+    if (sort && sort.field) {
       queryBuilder.orderBy(`role.${sort.field}`, sort.order);
     } else {
       queryBuilder.orderBy('role.created_at', 'DESC');

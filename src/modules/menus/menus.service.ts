@@ -63,36 +63,27 @@ export class MenusService {
   }
 
   async list(listDto: MenuListRequest) {
-    const { page, page_size, keyword, sort, filters } = listDto;
+    const { page, page_size, sort, id, parent_id, code, status, is_visible, route_path, created_at_from, created_at_to } = listDto;
     const skip = (page - 1) * page_size;
 
     const queryBuilder = this.menuRepository.createQueryBuilder('menu');
 
-    if (keyword) {
-      queryBuilder.andWhere(
-        "(menu.code LIKE :keyword OR menu.labels::text LIKE :keyword)",
-        { keyword: `%${keyword}%` },
-      );
-    }
-
-    if (filters) {
-      if (filters.id) queryBuilder.andWhere('menu.id = :id', { id: filters.id });
-      if (filters.parent_id !== undefined) {
-        if (filters.parent_id === null) {
-          queryBuilder.andWhere('menu.parent_id IS NULL');
-        } else {
-          queryBuilder.andWhere('menu.parent_id = :parentId', { parentId: filters.parent_id });
-        }
+    if (id) queryBuilder.andWhere('menu.id = :id', { id });
+    if (parent_id !== undefined) {
+      if (parent_id === null) {
+        queryBuilder.andWhere('menu.parent_id IS NULL');
+      } else {
+        queryBuilder.andWhere('menu.parent_id = :parentId', { parentId: parent_id });
       }
-      if (filters.code) queryBuilder.andWhere('menu.code LIKE :code', { code: `%${filters.code}%` });
-      if (filters.status) queryBuilder.andWhere('menu.status = :status', { status: filters.status });
-      if (filters.is_visible !== undefined) queryBuilder.andWhere('menu.is_visible = :visible', { visible: filters.is_visible });
-      if (filters.route_path) queryBuilder.andWhere('menu.route_path LIKE :path', { path: `%${filters.route_path}%` });
-      if (filters.created_at_from) queryBuilder.andWhere('menu.created_at >= :from', { from: filters.created_at_from });
-      if (filters.created_at_to) queryBuilder.andWhere('menu.created_at <= :to', { to: filters.created_at_to });
     }
+    if (code) queryBuilder.andWhere('menu.code LIKE :code', { code: `%${code}%` });
+    if (status) queryBuilder.andWhere('menu.status = :status', { status });
+    if (is_visible !== undefined) queryBuilder.andWhere('menu.is_visible = :visible', { visible: is_visible });
+    if (route_path) queryBuilder.andWhere('menu.route_path LIKE :path', { path: `%${route_path}%` });
+    if (created_at_from) queryBuilder.andWhere('menu.created_at >= :from', { from: created_at_from });
+    if (created_at_to) queryBuilder.andWhere('menu.created_at <= :to', { to: created_at_to });
 
-    if (sort) {
+    if (sort && sort.field) {
       queryBuilder.orderBy(`menu.${sort.field}`, sort.order);
     } else {
       queryBuilder.orderBy('menu.sort_order', 'ASC');

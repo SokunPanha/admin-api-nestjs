@@ -1,26 +1,27 @@
-import { IsOptional, IsString, IsEnum, IsArray } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsArray, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { UserStatus } from '../../../common/constants/entity-status';
 
-export class ListCenterUsersFilters {
-  @ApiPropertyOptional({ example: 1 })
+export class CenterUserListRequest extends PaginationDto {
+  @ApiPropertyOptional({ type: Number, example: 1 })
   @IsOptional()
+  @IsInt()
   @Type(() => Number)
   id?: number;
 
-  @ApiPropertyOptional({ example: 'john_doe' })
+  @ApiPropertyOptional({ type: String, example: 'john_doe' })
   @IsOptional()
   @IsString()
   username?: string;
 
-  @ApiPropertyOptional({ example: 'john@example.com' })
+  @ApiPropertyOptional({ type: String, example: 'john@example.com' })
   @IsOptional()
   @IsString()
   email?: string;
 
-  @ApiPropertyOptional({ example: '+1234567890' })
+  @ApiPropertyOptional({ type: String, example: '+1234567890' })
   @IsOptional()
   @IsString()
   phone_number?: string;
@@ -36,20 +37,13 @@ export class ListCenterUsersFilters {
   @Type(() => Number)
   role_ids?: number[];
 
-  @ApiPropertyOptional({ example: '2024-01-01T00:00:00Z' })
+  @ApiPropertyOptional({ type: String, example: '2024-01-01T00:00:00Z' })
   @IsOptional()
   @IsString()
   created_at_from?: string;
 
-  @ApiPropertyOptional({ example: '2024-12-31T23:59:59Z' })
+  @ApiPropertyOptional({ type: String, example: '2024-12-31T23:59:59Z' })
   @IsOptional()
   @IsString()
   created_at_to?: string;
-}
-
-export class CenterUserListRequest extends PaginationDto {
-  @ApiPropertyOptional({ type: ListCenterUsersFilters })
-  @IsOptional()
-  @Type(() => ListCenterUsersFilters)
-  declare filters?: ListCenterUsersFilters;
 }

@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { MultiLanguageText } from '../../../common/types/multi-language.type';
 
 // Data classes for nested objects
 export class AuthTokenData {
@@ -42,114 +43,114 @@ export class AuthUserData {
 }
 
 export class MenuItemData {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1, nullable: true })
   parent_id: number | null;
 
-  @ApiProperty({ example: 'dashboard' })
+  @ApiProperty({ type: String, example: 'dashboard' })
   code: string;
 
-  @ApiProperty({ example: { en: 'Dashboard', kh: 'ផ្ទាំងគ្រប់គ្រង' } })
-  labels: Record<string, string>;
+  @ApiProperty({ type: MultiLanguageText })
+  labels: MultiLanguageText;
 
-  @ApiProperty({ example: 'dashboard' })
+  @ApiProperty({ type: String, example: 'dashboard', nullable: true })
   icon: string | null;
 
-  @ApiProperty({ example: '/dashboard' })
+  @ApiProperty({ type: String, example: '/dashboard', nullable: true })
   route_path: string | null;
 
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   sort_order: number;
 
-  @ApiProperty({ type: [Object] })
+  @ApiProperty({ type: [MenuItemData], required: false })
   children?: MenuItemData[];
 }
 
 // Response classes
 export class AuthRegisterResponse {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ example: 'john_doe' })
+  @ApiProperty({ type: String, example: 'john_doe' })
   username: string;
 
-  @ApiProperty({ example: 'john@example.com' })
+  @ApiProperty({ type: String, example: 'john@example.com' })
   email: string;
 
-  @ApiProperty({ example: 'John' })
+  @ApiProperty({ type: String, example: 'John', nullable: true })
   first_name: string | null;
 
-  @ApiProperty({ example: 'Doe' })
+  @ApiProperty({ type: String, example: 'Doe', nullable: true })
   last_name: string | null;
 
-  @ApiProperty({ example: '+1234567890' })
+  @ApiProperty({ type: String, example: '+1234567890', nullable: true })
   phone_number: string | null;
 
-  @ApiProperty({ example: 'https://example.com/avatar.jpg' })
+  @ApiProperty({ type: String, example: 'https://example.com/avatar.jpg', nullable: true })
   avatar_url: string | null;
 
-  @ApiProperty({ example: 'active' })
+  @ApiProperty({ type: String, example: 'active' })
   status: string;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({ type: Date, example: '2024-01-01T00:00:00.000Z', nullable: true })
   last_login_at: Date | null;
 }
 
 export class AuthLoginResponse {
-  @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
+  @ApiProperty({ type: String, example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   access_token: string;
 
-  @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
+  @ApiProperty({ type: String, example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   refresh_token: string;
 
-  @ApiProperty({ example: 3600 })
+  @ApiProperty({ type: Number, example: 3600 })
   expires_in: number;
 }
 
 export class AuthRefreshTokenResponse {
-  @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
+  @ApiProperty({ type: String, example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   access_token: string;
 
-  @ApiProperty({ example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
+  @ApiProperty({ type: String, example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...' })
   refresh_token: string;
 
-  @ApiProperty({ example: 3600 })
+  @ApiProperty({ type: Number, example: 3600 })
   expires_in: number;
 }
 
 export class AuthLogoutResponse {
-  @ApiProperty({ example: 'success' })
+  @ApiProperty({ type: String, example: 'success' })
   message: string;
 }
 
 export class AuthProfileResponse {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ example: 'john_doe' })
+  @ApiProperty({ type: String, example: 'john_doe' })
   username: string;
 
-  @ApiProperty({ example: 'john@example.com' })
+  @ApiProperty({ type: String, example: 'john@example.com' })
   email: string;
 
-  @ApiProperty({ example: 'John' })
+  @ApiProperty({ type: String, example: 'John', nullable: true })
   first_name: string | null;
 
-  @ApiProperty({ example: 'Doe' })
+  @ApiProperty({ type: String, example: 'Doe', nullable: true })
   last_name: string | null;
 
-  @ApiProperty({ example: '+1234567890' })
+  @ApiProperty({ type: String, example: '+1234567890', nullable: true })
   phone_number: string | null;
 
-  @ApiProperty({ example: 'https://example.com/avatar.jpg' })
+  @ApiProperty({ type: String, example: 'https://example.com/avatar.jpg', nullable: true })
   avatar_url: string | null;
 
-  @ApiProperty({ example: 'active' })
+  @ApiProperty({ type: String, example: 'active' })
   status: string;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({ type: Date, example: '2024-01-01T00:00:00.000Z', nullable: true })
   last_login_at: Date | null;
 }
 

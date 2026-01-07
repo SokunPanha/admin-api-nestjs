@@ -12,25 +12,25 @@ export class RoleCreateResponse {
 }
 
 export class RoleItem {
-  @ApiProperty({ example: 1 })
+  @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ example: 'Admin' })
+  @ApiProperty({ type: String, example: 'Admin' })
   name: string;
 
-  @ApiProperty({ example: 'admin' })
+  @ApiProperty({ type: String, example: 'admin' })
   code: string;
 
-  @ApiProperty({ example: 'Administrator role with full access' })
+  @ApiProperty({ type: String, example: 'Administrator role with full access', nullable: true })
   description: string | null;
 
-  @ApiProperty({ example: 'active' })
+  @ApiProperty({ type: String, example: 'active' })
   status: string;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({ type: Date, example: '2024-01-01T00:00:00.000Z' })
   created_at: Date;
 
-  @ApiProperty({ example: '2024-01-01T00:00:00.000Z' })
+  @ApiProperty({ type: Date, example: '2024-01-01T00:00:00.000Z' })
   updated_at: Date;
 }
 
@@ -38,7 +38,7 @@ export class RoleListResponse {
   @ApiProperty({ type: [RoleItem] })
   items: RoleItem[];
 
-  @ApiProperty({ example: 50 })
+  @ApiProperty({ type: Number, example: 50 })
   total: number;
 }
 

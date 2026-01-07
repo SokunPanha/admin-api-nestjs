@@ -1,21 +1,22 @@
-import { IsOptional, IsString, IsEnum, IsArray } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsArray, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
 import { RoleStatus } from '../../../common/constants/entity-status';
 
-export class ListRolesFilters {
-  @ApiPropertyOptional({ example: 1 })
+export class RoleListRequest extends PaginationDto {
+  @ApiPropertyOptional({ type: Number, example: 1 })
   @IsOptional()
+  @IsInt()
   @Type(() => Number)
   id?: number;
 
-  @ApiPropertyOptional({ example: 'Admin' })
+  @ApiPropertyOptional({ type: String, example: 'Admin' })
   @IsOptional()
   @IsString()
   name?: string;
 
-  @ApiPropertyOptional({ example: 'admin' })
+  @ApiPropertyOptional({ type: String, example: 'admin' })
   @IsOptional()
   @IsString()
   code?: string;
@@ -31,20 +32,13 @@ export class ListRolesFilters {
   @Type(() => Number)
   menu_ids?: number[];
 
-  @ApiPropertyOptional({ example: '2024-01-01T00:00:00Z' })
+  @ApiPropertyOptional({ type: String, example: '2024-01-01T00:00:00Z' })
   @IsOptional()
   @IsString()
   created_at_from?: string;
 
-  @ApiPropertyOptional({ example: '2024-12-31T23:59:59Z' })
+  @ApiPropertyOptional({ type: String, example: '2024-12-31T23:59:59Z' })
   @IsOptional()
   @IsString()
   created_at_to?: string;
-}
-
-export class RoleListRequest extends PaginationDto {
-  @ApiPropertyOptional({ type: ListRolesFilters })
-  @IsOptional()
-  @Type(() => ListRolesFilters)
-  declare filters?: ListRolesFilters;
 }

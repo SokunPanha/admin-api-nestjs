@@ -65,66 +65,53 @@ export class CenterUsersService {
   }
 
   async list(listDto: CenterUserListRequest) {
-    const { page, page_size, keyword, sort, filters } = listDto;
+    const { page, page_size, sort, id, username, email, phone_number, status, created_at_from, created_at_to, role_ids } = listDto;
     const skip = (page - 1) * page_size;
 
     const queryBuilder =
       this.centerUserRepository.createQueryBuilder('user');
 
-    // Keyword search
-    if (keyword) {
-      queryBuilder.andWhere(
-        '(user.username LIKE :keyword OR user.email LIKE :keyword OR user.first_name LIKE :keyword OR user.last_name LIKE :keyword)',
-        { keyword: `%${keyword}%` },
-      );
+    if (id) {
+      queryBuilder.andWhere('user.id = :id', { id });
     }
-
-    // Apply filters
-    if (filters) {
-      if (filters.id) {
-        queryBuilder.andWhere('user.id = :id', { id: filters.id });
-      }
-      if (filters.username) {
-        queryBuilder.andWhere('user.username LIKE :username', {
-          username: `%${filters.username}%`,
+    if (username) {
+      queryBuilder.andWhere('user.username LIKE :username', {
+        username: `%${username}%`,
+      });
+    }
+    if (email) {
+      queryBuilder.andWhere('user.email LIKE :email', {
+        email: `%${email}%`,
+      });
+    }
+    if (phone_number) {
+      queryBuilder.andWhere('user.phone_number LIKE :phone_number', {
+        phone_number: `%${phone_number}%`,
+      });
+    }
+    if (status) {
+      queryBuilder.andWhere('user.status = :status', { status });
+    }
+    if (created_at_from) {
+      queryBuilder.andWhere('user.created_at >= :from', {
+        from: created_at_from,
+      });
+    }
+    if (created_at_to) {
+      queryBuilder.andWhere('user.created_at <= :to', {
+        to: created_at_to,
+      });
+    }
+    if (role_ids && role_ids.length > 0) {
+      queryBuilder
+        .innerJoin('user.user_roles', 'ur')
+        .andWhere('ur.role_id IN (:...roleIds)', {
+          roleIds: role_ids,
         });
-      }
-      if (filters.email) {
-        queryBuilder.andWhere('user.email LIKE :email', {
-          email: `%${filters.email}%`,
-        });
-      }
-      if (filters.phone_number) {
-        queryBuilder.andWhere('user.phone_number LIKE :phone_number', {
-          phone_number: `%${filters.phone_number}%`,
-        });
-      }
-      if (filters.status) {
-        queryBuilder.andWhere('user.status = :status', {
-          status: filters.status,
-        });
-      }
-      if (filters.created_at_from) {
-        queryBuilder.andWhere('user.created_at >= :from', {
-          from: filters.created_at_from,
-        });
-      }
-      if (filters.created_at_to) {
-        queryBuilder.andWhere('user.created_at <= :to', {
-          to: filters.created_at_to,
-        });
-      }
-      if (filters.role_ids && filters.role_ids.length > 0) {
-        queryBuilder
-          .innerJoin('user.user_roles', 'ur')
-          .andWhere('ur.role_id IN (:...roleIds)', {
-            roleIds: filters.role_ids,
-          });
-      }
     }
 
     // Sorting
-    if (sort) {
+    if (sort && sort.field) {
       queryBuilder.orderBy(`user.${sort.field}`, sort.order);
     } else {
       queryBuilder.orderBy('user.created_at', 'DESC');
