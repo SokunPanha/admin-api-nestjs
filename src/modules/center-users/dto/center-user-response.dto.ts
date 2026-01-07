@@ -1,15 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CenterUserCreateResponse {
-  @ApiProperty({ example: 201 })
-  code: number;
-
-  @ApiProperty({ example: 'Created' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
+export class CenterUserCreateResponse {}
 
 export class CenterUserItem {
   @ApiProperty({ type: Number, example: 1 })
@@ -54,46 +45,10 @@ export class CenterUserListResponse {
   total: number;
 }
 
-export class CenterUserUpdateResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
+export class CenterUserUpdateResponse {}
 
-  @ApiProperty({ example: 'Success' })
-  message: string;
+export class CenterUserDeleteResponse {}
 
-  @ApiProperty()
-  data: any;
-}
+export class CenterUserUpdateStatusResponse {}
 
-export class CenterUserDeleteResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
-
-  @ApiProperty({ example: 'Success' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
-
-export class CenterUserUpdateStatusResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
-
-  @ApiProperty({ example: 'Status updated successfully' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
-
-export class CenterUserAssignRolesResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
-
-  @ApiProperty({ example: 'Roles assigned successfully' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
+export class CenterUserAssignRolesResponse {}

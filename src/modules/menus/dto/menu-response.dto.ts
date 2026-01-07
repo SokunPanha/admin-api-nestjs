@@ -1,16 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { MultiLanguageText } from '../../../common/types/multi-language.type';
 
-export class MenuCreateResponse {
-  @ApiProperty({ example: 201 })
-  code: number;
-
-  @ApiProperty({ example: 'Created' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
+export class MenuCreateResponse {}
 
 export class MenuItem {
   @ApiProperty({ type: Number, example: 1 })
@@ -55,35 +46,8 @@ export class MenuListResponse {
   total: number;
 }
 
-export class MenuUpdateResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
+export class MenuUpdateResponse {}
 
-  @ApiProperty({ example: 'Success' })
-  message: string;
+export class MenuDeleteResponse {}
 
-  @ApiProperty()
-  data: any;
-}
-
-export class MenuDeleteResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
-
-  @ApiProperty({ example: 'Success' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
-
-export class MenuUpdateStatusResponse {
-  @ApiProperty({ example: 200 })
-  code: number;
-
-  @ApiProperty({ example: 'Status updated successfully' })
-  message: string;
-
-  @ApiProperty()
-  data: any;
-}
+export class MenuUpdateStatusResponse {}
