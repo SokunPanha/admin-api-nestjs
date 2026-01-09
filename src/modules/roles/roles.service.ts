@@ -14,6 +14,7 @@ import { RoleCreateRequest } from './dto/create-role.dto';
 import { RoleUpdateRequest } from './dto/update-role.dto';
 import { RoleListRequest } from './dto/list-roles.dto';
 import { RoleAssignMenusRequest } from './dto/assign-menus.dto';
+import { RoleBindMenuListRequest } from './dto/role-bind-menu-list.dto';
 import {
   StatusCode,
   StatusMessages,
@@ -233,6 +234,37 @@ export class RolesService {
       code: StatusCode.SUCCESS,
       message: 'Menus assigned successfully',
       data: { role_id, menu_ids },
+    };
+  }
+
+  async getRoleBindMenuList(request: RoleBindMenuListRequest) {
+    const { role_id } = request;
+
+    // Check if role exists
+    const role = await this.roleRepository.findOne({
+      where: { id: role_id },
+    });
+
+    if (!role) {
+      throw new NotFoundException({
+        code: StatusCode.NOT_FOUND,
+        message: StatusMessages[StatusCode.NOT_FOUND],
+        data: null,
+      });
+    }
+
+    // Get all menu IDs associated with this role
+    const roleMenus = await this.roleMenuRepository.find({
+      where: { role_id },
+      select: ['menu_id'],
+    });
+
+    const menu_ids = roleMenus.map((rm) => rm.menu_id);
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: StatusMessages[StatusCode.SUCCESS],
+      data: { menu_ids },
     };
   }
 }

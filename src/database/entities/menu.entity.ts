@@ -1,4 +1,4 @@
-import { Entity, Column, Index, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, Index, OneToMany } from 'typeorm';
 import { BaseEntity } from './base.entity';
 import { MenuStatus } from '../../common/constants/entity-status';
 import { RoleMenu } from './role-menu.entity';
@@ -31,11 +31,7 @@ export class Menu extends BaseEntity {
   is_visible: boolean;
 
   // Relations
-  @ManyToOne(() => Menu, (menu) => menu.children)
-  @JoinColumn({ name: 'parent_id' })
-  parent: Menu;
-
-  @OneToMany(() => Menu, (menu) => menu.parent)
+  @OneToMany(() => Menu, (menu) => menu.parent_id)
   children: Menu[];
 
   @OneToMany(() => RoleMenu, (roleMenu) => roleMenu.menu)

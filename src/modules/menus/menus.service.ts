@@ -110,7 +110,7 @@ export class MenusService {
   async findById(id: number) {
     const menu = await this.menuRepository.findOne({
       where: { id },
-      relations: ['parent', 'children', 'role_menus'],
+      relations: ['role_menus'],
     });
 
     if (!menu) {
@@ -199,7 +199,6 @@ export class MenusService {
   async delete(id: number) {
     const menu = await this.menuRepository.findOne({
       where: { id },
-      relations: ['children'],
     });
 
     if (!menu) {
@@ -210,11 +209,16 @@ export class MenusService {
       });
     }
 
-    if (menu.children && menu.children.length > 0) {
+    // Check if menu has children
+    const childrenCount = await this.menuRepository.count({
+      where: { parent_id: id },
+    });
+
+    if (childrenCount > 0) {
       throw new BadRequestException({
         code: StatusCode.MENU_HAS_CHILDREN,
         message: StatusMessages[StatusCode.MENU_HAS_CHILDREN],
-        data: { children_count: menu.children.length },
+        data: { children_count: childrenCount },
       });
     }
 

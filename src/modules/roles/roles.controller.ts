@@ -8,6 +8,10 @@ import { RoleUpdateStatusRequest } from './dto/update-status.dto';
 import { RoleListRequest } from './dto/list-roles.dto';
 import { RoleAssignMenusRequest } from './dto/assign-menus.dto';
 import {
+  RoleBindMenuListRequest,
+  RoleBindMenuListResponse,
+} from './dto/role-bind-menu-list.dto';
+import {
   RoleCreateResponse,
   RoleListResponse,
   RoleUpdateResponse,
@@ -65,5 +69,12 @@ export class RolesController {
   @ApiResponse({ status: 200, type: RoleAssignMenusResponse })
   assignMenus(@Body() assignDto: RoleAssignMenusRequest) {
     return this.rolesService.assignMenus(assignDto);
+  }
+
+  @Post('role-bind-menu-list')
+  @ApiOperation({ summary: 'Get list of menu IDs bound to a role' })
+  @ApiResponse({ status: 200, type: RoleBindMenuListResponse })
+  getRoleBindMenuList(@Body() request: RoleBindMenuListRequest) {
+    return this.rolesService.getRoleBindMenuList(request);
   }
 }

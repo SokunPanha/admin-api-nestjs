@@ -45,7 +45,7 @@ export class CenterUserCreateRequest {
 
   @ApiPropertyOptional({
     enum: UserStatus,
-    example: UserStatus.PENDING_VERIFICATION,
+    example: UserStatus.ACTIVE,
   })
   @IsOptional()
   @IsEnum(UserStatus)

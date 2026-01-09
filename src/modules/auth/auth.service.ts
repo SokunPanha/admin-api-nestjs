@@ -20,7 +20,7 @@ export class AuthService {
     private refreshTokenRepository: Repository<RefreshToken>,
     private jwtService: JwtService,
     private configService: ConfigService,
-  ) {}
+  ) { }
 
   async register(registerDto: AuthRegisterRequest) {
     // Check if username already exists
@@ -54,7 +54,7 @@ export class AuthService {
     const user = this.userRepository.create({
       ...registerDto,
       password_hash,
-      status: UserStatus.PENDING_VERIFICATION,
+      status: UserStatus.ACTIVE,
     });
 
     await this.userRepository.save(user);

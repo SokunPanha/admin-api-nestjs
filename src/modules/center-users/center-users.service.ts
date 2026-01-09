@@ -13,6 +13,8 @@ import { CenterUserCreateRequest } from './dto/create-center-user.dto';
 import { CenterUserUpdateRequest } from './dto/update-center-user.dto';
 import { CenterUserListRequest } from './dto/list-center-users.dto';
 import { CenterUserAssignRolesRequest } from './dto/assign-roles.dto';
+import { UserBindRoleListRequest } from './dto/user-bind-role-list.dto';
+import { CenterUserUpdatePasswordRequest } from './dto/update-password.dto';
 import {
   StatusCode,
   StatusMessages,
@@ -284,6 +286,66 @@ export class CenterUsersService {
       code: StatusCode.SUCCESS,
       message: 'Roles assigned successfully',
       data: { user_id, role_ids },
+    };
+  }
+
+  async getUserBindRoleList(request: UserBindRoleListRequest) {
+    const { user_id } = request;
+
+    // Check if user exists
+    const user = await this.centerUserRepository.findOne({
+      where: { id: user_id },
+    });
+
+    if (!user) {
+      throw new NotFoundException({
+        code: StatusCode.NOT_FOUND,
+        message: StatusMessages[StatusCode.NOT_FOUND],
+        data: null,
+      });
+    }
+
+    // Get all role IDs associated with this user
+    const userRoles = await this.centerUserRoleRepository.find({
+      where: { user_id },
+      select: ['role_id'],
+    });
+
+    const role_ids = userRoles.map((ur) => ur.role_id);
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: StatusMessages[StatusCode.SUCCESS],
+      data: { role_ids },
+    };
+  }
+
+  async updatePassword(updatePasswordDto: CenterUserUpdatePasswordRequest) {
+    const { id, new_password } = updatePasswordDto;
+
+    const user = await this.centerUserRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new NotFoundException({
+        code: StatusCode.NOT_FOUND,
+        message: StatusMessages[StatusCode.NOT_FOUND],
+        data: null,
+      });
+    }
+
+    // Hash the new password
+    const password_hash = await bcrypt.hash(new_password, 10);
+
+    // Update password
+    user.password_hash = password_hash;
+    await this.centerUserRepository.save(user);
+
+    return {
+      code: StatusCode.SUCCESS,
+      message: 'Password updated successfully',
+      data: null,
     };
   }
 }

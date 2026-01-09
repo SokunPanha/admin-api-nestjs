@@ -31,7 +31,7 @@ export class CenterUser extends BaseEntity {
   @Column({
     type: 'varchar',
     length: 50,
-    default: UserStatus.PENDING_VERIFICATION,
+    default: UserStatus.ACTIVE,
   })
   status: UserStatus;
 

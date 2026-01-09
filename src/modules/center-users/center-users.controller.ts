@@ -8,6 +8,14 @@ import { CenterUserUpdateStatusRequest } from './dto/update-status.dto';
 import { CenterUserListRequest } from './dto/list-center-users.dto';
 import { CenterUserAssignRolesRequest } from './dto/assign-roles.dto';
 import {
+  UserBindRoleListRequest,
+  UserBindRoleListResponse,
+} from './dto/user-bind-role-list.dto';
+import {
+  CenterUserUpdatePasswordRequest,
+  CenterUserUpdatePasswordResponse,
+} from './dto/update-password.dto';
+import {
   CenterUserCreateResponse,
   CenterUserListResponse,
   CenterUserUpdateResponse,
@@ -65,5 +73,19 @@ export class CenterUsersController {
   @ApiResponse({ status: 200, type: CenterUserAssignRolesResponse })
   assignRoles(@Body() assignDto: CenterUserAssignRolesRequest) {
     return this.centerUsersService.assignRoles(assignDto);
+  }
+
+  @Post('user-bind-role-list')
+  @ApiOperation({ summary: 'Get list of role IDs bound to a user' })
+  @ApiResponse({ status: 200, type: UserBindRoleListResponse })
+  getUserBindRoleList(@Body() request: UserBindRoleListRequest) {
+    return this.centerUsersService.getUserBindRoleList(request);
+  }
+
+  @Post('update-password')
+  @ApiOperation({ summary: 'Update user password' })
+  @ApiResponse({ status: 200, type: CenterUserUpdatePasswordResponse })
+  updatePassword(@Body() updatePasswordDto: CenterUserUpdatePasswordRequest) {
+    return this.centerUsersService.updatePassword(updatePasswordDto);
   }
 }
