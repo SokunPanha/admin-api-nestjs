@@ -3,6 +3,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -24,6 +25,9 @@ async function bootstrap() {
 
   // Global response interceptor
   app.useGlobalInterceptors(new ResponseInterceptor());
+
+  // Global exception filter (after interceptors)
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   // Enable CORS
   app.enableCors({

@@ -8,6 +8,7 @@ import {
   QueryResolver,
   HeaderResolver,
 } from 'nestjs-i18n';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import * as path from 'path';
 import databaseConfig from './config/database.config';
 import { AuthModule } from './modules/auth/auth.module';
@@ -44,6 +45,20 @@ import { RolesGuard } from './common/guards/roles.guard';
       ],
     }),
 
+    // Rate limiting
+    ThrottlerModule.forRoot([
+      {
+        name: 'default',
+        ttl: 60000, // 60 seconds
+        limit: 10, // 10 requests per minute
+      },
+      {
+        name: 'auth',
+        ttl: 60000, // 60 seconds
+        limit: 5, // 5 auth requests per minute
+      },
+    ]),
+
     // Feature modules
     AuthModule,
     CenterUsersModule,
@@ -61,6 +76,11 @@ import { RolesGuard } from './common/guards/roles.guard';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    // Apply Throttler guard globally
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })
