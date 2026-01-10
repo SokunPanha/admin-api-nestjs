@@ -5,7 +5,6 @@ import {
   IsObject,
   IsOptional,
   IsString,
-  MinLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -18,11 +17,6 @@ export class MenuCreateRequest {
   @IsInt()
   @Type(() => Number)
   parent_id?: number;
-
-  @ApiProperty({ example: 'dashboard' })
-  @IsString()
-  @MinLength(2)
-  code: string;
 
   @ApiProperty({
     type: MultiLanguageText,

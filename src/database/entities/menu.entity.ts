@@ -9,9 +9,6 @@ export class Menu extends BaseEntity {
   @Column({ type: 'bigint', nullable: true })
   parent_id: number | null;
 
-  @Column({ type: 'varchar', length: 100, unique: true })
-  code: string;
-
   @Column({ type: 'jsonb' })
   labels: Record<string, string>; // { "en": "Dashboard", "kh": "..." }
 

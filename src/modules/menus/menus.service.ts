@@ -1,11 +1,10 @@
 import {
   Injectable,
-  ConflictException,
   NotFoundException,
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, IsNull } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Menu } from '../../database/entities/menu.entity';
 import { RoleMenu } from '../../database/entities/role-menu.entity';
 import { MenuCreateRequest } from './dto/create-menu.dto';
@@ -27,18 +26,6 @@ export class MenusService {
   ) {}
 
   async create(createDto: MenuCreateRequest) {
-    const existing = await this.menuRepository.findOne({
-      where: { code: createDto.code },
-    });
-
-    if (existing) {
-      throw new ConflictException({
-        code: StatusCode.CONFLICT,
-        message: 'Menu code already exists',
-        data: null,
-      });
-    }
-
     // Convert parent_id = 0 to null for top-level menus
     const parent_id = createDto.parent_id === 0 ? null : createDto.parent_id;
 
@@ -70,7 +57,7 @@ export class MenusService {
   }
 
   async list(listDto: MenuListRequest) {
-    const { page, page_size, sort, id, parent_id, code, status, is_visible, route_path, created_at_from, created_at_to } = listDto;
+    const { page, page_size, sort, id, parent_id, status, is_visible, route_path, created_at_from, created_at_to } = listDto;
     const skip = (page - 1) * page_size;
 
     const queryBuilder = this.menuRepository.createQueryBuilder('menu');
@@ -83,7 +70,6 @@ export class MenusService {
         queryBuilder.andWhere('menu.parent_id = :parentId', { parentId: parent_id });
       }
     }
-    if (code) queryBuilder.andWhere('menu.code LIKE :code', { code: `%${code}%` });
     if (status) queryBuilder.andWhere('menu.status = :status', { status });
     if (is_visible !== undefined) queryBuilder.andWhere('menu.is_visible = :visible', { visible: is_visible });
     if (route_path) queryBuilder.andWhere('menu.route_path LIKE :path', { path: `%${route_path}%` });
@@ -137,20 +123,6 @@ export class MenusService {
         message: StatusMessages[StatusCode.NOT_FOUND],
         data: null,
       });
-    }
-
-    if (updateDto.code) {
-      const existing = await this.menuRepository.findOne({
-        where: { code: updateDto.code },
-      });
-
-      if (existing && existing.id !== id) {
-        throw new ConflictException({
-          code: StatusCode.CONFLICT,
-          message: 'Menu code already exists',
-          data: null,
-        });
-      }
     }
 
     // Convert parent_id = 0 to null for top-level menus
@@ -267,8 +239,7 @@ export class MenusService {
 
     const items = menus.map((menu) => ({
       id: menu.id,
-      code: menu.code,
-      label: menu.labels?.en || menu.code,
+      label: menu.labels?.en || `Menu ${menu.id}`,
     }));
 
     return {

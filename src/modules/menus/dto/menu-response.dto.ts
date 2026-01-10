@@ -10,9 +10,6 @@ export class MenuItem {
   @ApiProperty({ type: Number, example: 1, nullable: true })
   parent_id: number | null;
 
-  @ApiProperty({ type: String, example: 'dashboard' })
-  code: string;
-
   @ApiProperty({ type: MultiLanguageText })
   labels: MultiLanguageText;
 

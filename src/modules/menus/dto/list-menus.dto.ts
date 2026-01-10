@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsEnum, IsBoolean, IsInt } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsInt } from 'class-validator';
 import { Type } from 'class-transformer';
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { PaginationDto } from '../../../common/dto/pagination.dto';
@@ -15,11 +15,6 @@ export class MenuListRequest extends PaginationDto {
   @IsOptional()
   @Type(() => Number)
   parent_id?: number | null;
-
-  @ApiPropertyOptional({ type: String, example: 'dashboard' })
-  @IsOptional()
-  @IsString()
-  code?: string;
 
   @ApiPropertyOptional({ enum: MenuStatus })
   @IsOptional()

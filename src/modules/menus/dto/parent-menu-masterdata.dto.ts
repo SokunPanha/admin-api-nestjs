@@ -13,9 +13,6 @@ export class ParentMenuMasterdataItem {
   @ApiProperty({ type: Number, example: 1 })
   id: number;
 
-  @ApiProperty({ type: String, example: 'dashboard' })
-  code: string;
-
   @ApiProperty({ type: String, example: 'Dashboard' })
   label: string;
 }

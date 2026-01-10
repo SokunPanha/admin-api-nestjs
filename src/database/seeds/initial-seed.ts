@@ -18,7 +18,6 @@ export async function runInitialSeed(dataSource: DataSource) {
 
   // Create System Settings parent menu
   const systemSettingsMenu = menuRepository.create({
-    code: 'system-settings',
     labels: {
       en: 'System Settings',
       kh: 'ការកំណត់ប្រព័ន្ធ',
@@ -35,7 +34,6 @@ export async function runInitialSeed(dataSource: DataSource) {
 
   // Create child menus
   const usersMenu = menuRepository.create({
-    code: 'users',
     labels: {
       en: 'Users',
       kh: 'អ្នកប្រើប្រាស់',
@@ -51,7 +49,6 @@ export async function runInitialSeed(dataSource: DataSource) {
   console.log('✅ Created Users menu');
 
   const rolesMenu = menuRepository.create({
-    code: 'roles',
     labels: {
       en: 'Roles',
       kh: 'តួនាទី',
@@ -67,7 +64,6 @@ export async function runInitialSeed(dataSource: DataSource) {
   console.log('✅ Created Roles menu');
 
   const menusMenu = menuRepository.create({
-    code: 'menus',
     labels: {
       en: 'Menus',
       kh: 'ម៉ឺនុយ',
