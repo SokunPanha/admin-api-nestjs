@@ -6,5 +6,10 @@
   "success": "Success",
   "error": "Error",
   "notFound": "Not found",
-  "serverError": "Internal server error"
+  "serverError": "Internal server error",
+  "badRequest": "Bad request",
+  "unauthorized": "Unauthorized",
+  "forbidden": "Forbidden",
+  "conflict": "Resource already exists",
+  "validationFailed": "Validation failed"
 }

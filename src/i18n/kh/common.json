@@ -1,0 +1,15 @@
+{
+  "welcome": "សូមស្វាគមន៍",
+  "hello": "សួស្តី {name}!",
+  "goodbye": "លាហើយ",
+  "language": "ភាសា",
+  "success": "ជោគជ័យ",
+  "error": "កំហុស",
+  "notFound": "រកមិនឃើញ",
+  "serverError": "កំហុសម៉ាស៊ីនមេខាងក្នុង",
+  "badRequest": "ការស្នើសុំមិនត្រឹមត្រូវ",
+  "unauthorized": "មិនមានការអនុញ្ញាត",
+  "forbidden": "ហាមឃាត់",
+  "conflict": "ធនធានមានរួចហើយ",
+  "validationFailed": "ការផ្ទៀងផ្ទាត់បានបរាជ័យ"
+}

@@ -1,0 +1,9 @@
+{
+  "isNotEmpty": "{{field}} should not be empty",
+  "isString": "{{field}} must be a string",
+  "isEmail": "{{field}} must be a valid email",
+  "minLength": "{{field}} must be at least {{min}} characters",
+  "maxLength": "{{field}} must not exceed {{max}} characters",
+  "matches": "{{field}} does not match the required format",
+  "isStrongPassword": "Password must contain uppercase, lowercase, and number or special character"
+}
