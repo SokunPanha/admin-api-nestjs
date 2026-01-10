@@ -24,7 +24,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
-  @Throttle({ auth: { limit: 3, ttl: 60000 } }) // 3 registrations per minute
+  // @Throttle({ auth: { limit: 3, ttl: 60000 } }) // 3 registrations per minute (disabled for this version)
   @Post('register')
   @ApiOperation({ summary: 'Register a new user' })
   @ApiResponse({ status: 201, type: AuthRegisterResponse })
@@ -33,7 +33,7 @@ export class AuthController {
   }
 
   @Public()
-  @Throttle({ auth: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute
+  // @Throttle({ auth: { limit: 5, ttl: 60000 } }) // 5 login attempts per minute (disabled for this version)
   @Post('login')
   @ApiOperation({ summary: 'Login with username and password' })
   @ApiResponse({ status: 200, type: AuthLoginResponse })

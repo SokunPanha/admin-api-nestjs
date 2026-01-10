@@ -45,19 +45,19 @@ import { RolesGuard } from './common/guards/roles.guard';
       ],
     }),
 
-    // Rate limiting
-    ThrottlerModule.forRoot([
-      {
-        name: 'default',
-        ttl: 60000, // 60 seconds
-        limit: 10, // 10 requests per minute
-      },
-      {
-        name: 'auth',
-        ttl: 60000, // 60 seconds
-        limit: 5, // 5 auth requests per minute
-      },
-    ]),
+    // Rate limiting (disabled for this version)
+    // ThrottlerModule.forRoot([
+    //   {
+    //     name: 'default',
+    //     ttl: 60000, // 60 seconds
+    //     limit: 10, // 10 requests per minute
+    //   },
+    //   {
+    //     name: 'auth',
+    //     ttl: 60000, // 60 seconds
+    //     limit: 5, // 5 auth requests per minute
+    //   },
+    // ]),
 
     // Feature modules
     AuthModule,
@@ -77,11 +77,11 @@ import { RolesGuard } from './common/guards/roles.guard';
       provide: APP_GUARD,
       useClass: RolesGuard,
     },
-    // Apply Throttler guard globally
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // Apply Throttler guard globally (disabled for this version)
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {}
