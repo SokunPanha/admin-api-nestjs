@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CenterUser } from '../../../database/entities/center-user.entity';
 import { UserStatus } from '../../../common/constants/entity-status';
+import { StatusCode } from '../../../common/constants/status-codes';
 
 export interface JwtPayload {
   sub: number;
@@ -26,7 +27,6 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       secretOrKey: configService.get<string>('JWT_ACCESS_SECRET') || 'default-secret',
     });
   }
-
   async validate(payload: JwtPayload) {
     const user = await this.userRepository.findOne({
       where: { id: payload.sub },
@@ -34,11 +34,17 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     });
 
     if (!user) {
-      throw new UnauthorizedException('User not found');
+      throw new UnauthorizedException({
+        code: StatusCode.USER_NOT_FOUND,
+        message: 'User not found',
+      });
     }
 
     if (user.status !== UserStatus.ACTIVE) {
-      throw new UnauthorizedException('User account is not active');
+      throw new UnauthorizedException({
+        code: StatusCode.ACCOUNT_NOT_ACTIVE,
+        message: 'User account is not active',
+      });
     }
 
     // Remove password from response

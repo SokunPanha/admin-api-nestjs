@@ -9,7 +9,6 @@ import { RefreshToken } from '../../database/entities/refresh-token.entity';
 import { AuthRegisterRequest } from './dto/register.dto';
 import { AuthLoginRequest } from './dto/login.dto';
 import { UserStatus } from '../../common/constants/entity-status';
-import { StatusCode } from '../../common/constants/status-codes';
 
 @Injectable()
 export class AuthService {
@@ -29,10 +28,7 @@ export class AuthService {
     });
 
     if (existingUsername) {
-      throw new ConflictException({
-        code: StatusCode.USERNAME_ALREADY_EXISTS,
-        message: 'Username already exists',
-      });
+      throw new ConflictException('auth.errors.usernameExists');
     }
 
     // Check if email already exists
@@ -41,10 +37,7 @@ export class AuthService {
     });
 
     if (existingEmail) {
-      throw new ConflictException({
-        code: StatusCode.EMAIL_ALREADY_EXISTS,
-        message: 'Email already exists',
-      });
+      throw new ConflictException('auth.errors.emailExists');
     }
 
     // Hash password
@@ -62,11 +55,7 @@ export class AuthService {
     // Remove password from response
     delete user.password_hash;
 
-    return {
-      code: StatusCode.CREATED,
-      message: 'User registered successfully',
-      data: user,
-    };
+    return user;
   }
 
   async login(loginDto: AuthLoginRequest) {
@@ -76,28 +65,19 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException({
-        code: StatusCode.INVALID_CREDENTIALS,
-        message: 'Invalid credentials',
-      });
+      throw new UnauthorizedException('auth.errors.invalidCredentials');
     }
 
     // Check if user is active
     if (user.status !== UserStatus.ACTIVE) {
-      throw new UnauthorizedException({
-        code: StatusCode.ACCOUNT_NOT_ACTIVE,
-        message: 'Account is not active',
-      });
+      throw new UnauthorizedException('auth.errors.accountNotActive');
     }
 
     // Verify password
     const isPasswordValid = await bcrypt.compare(loginDto.password, user.password_hash || '');
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException({
-        code: StatusCode.INVALID_CREDENTIALS,
-        message: 'Invalid credentials',
-      });
+      throw new UnauthorizedException('auth.errors.invalidCredentials');
     }
 
     // Generate tokens
@@ -108,17 +88,9 @@ export class AuthService {
     await this.userRepository.save(user);
 
     return {
-      code: StatusCode.SUCCESS,
-      message: 'Login successful',
-      data: {
-        user: {
-          id: user.id,
-          email: user.email,
-          username: user.username,
-        },
-        access_token: tokens.access_token,
-        refresh_token: tokens.refresh_token,
-      },
+      access_token: tokens.access_token,
+      refresh_token: tokens.refresh_token,
+      expires_in: 3600,
     };
   }
 
@@ -130,10 +102,7 @@ export class AuthService {
     });
 
     if (!refreshToken) {
-      throw new UnauthorizedException({
-        code: StatusCode.INVALID_REFRESH_TOKEN,
-        message: 'Invalid refresh token',
-      });
+      throw new UnauthorizedException('auth.errors.invalidRefreshToken');
     }
 
     // Revoke old refresh token
@@ -143,11 +112,7 @@ export class AuthService {
     // Generate new tokens
     const tokens = await this.generateTokens(refreshToken.user);
 
-    return {
-      code: StatusCode.SUCCESS,
-      message: 'Token refreshed successfully',
-      data: tokens,
-    };
+    return tokens;
   }
 
   async logout(userId: number, tokenId: number) {
@@ -162,9 +127,7 @@ export class AuthService {
     }
 
     return {
-      code: StatusCode.SUCCESS,
       message: 'Logout successful',
-      data: null,
     };
   }
 
@@ -174,28 +137,19 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new BadRequestException({
-        code: StatusCode.USER_NOT_FOUND,
-        message: 'User not found',
-      });
+      throw new BadRequestException('auth.errors.userNotFound');
     }
 
     return {
-      code: StatusCode.SUCCESS,
-      message: 'Profile retrieved successfully',
-      data: {
-        id: user.id,
-        username: user.username,
-        email: user.email,
-        first_name: user.first_name,
-        last_name: user.last_name,
-        phone_number: user.phone_number,
-        avatar_url: user.avatar_url,
-        status: user.status,
-        last_login_at: user.last_login_at,
-        created_at: user.created_at,
-        updated_at: user.updated_at,
-      },
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      phone_number: user.phone_number,
+      avatar_url: user.avatar_url,
+      status: user.status,
+      last_login_at: user.last_login_at,
     };
   }
 
@@ -206,10 +160,12 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException({
-        code: StatusCode.INVALID_CREDENTIALS,
-        message: 'User not found',
-      });
+      throw new UnauthorizedException('auth.errors.userNotFound');
+    }
+
+    // Check if user is active
+    if (user.status !== UserStatus.ACTIVE) {
+      throw new UnauthorizedException('auth.errors.accountNotActive');
     }
 
     // Collect all unique menus from all user roles
@@ -229,9 +185,7 @@ export class AuthService {
     const menuTree = this.buildMenuTree(allMenus);
 
     return {
-      code: StatusCode.SUCCESS,
-      message: 'Menus retrieved successfully',
-      data: menuTree,
+      menus: menuTree,
     };
   }
 
