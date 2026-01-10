@@ -6,8 +6,12 @@ import {
 } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ApiResponse } from '../interfaces/api-response.interface';
-import { StatusCode, StatusMessages } from '../constants/status-codes';
+
+export interface ApiResponse<T> {
+  message: string;
+  data: T;
+  timestamp?: string;
+}
 
 @Injectable()
 export class ResponseInterceptor<T>
@@ -20,14 +24,13 @@ export class ResponseInterceptor<T>
     return next.handle().pipe(
       map((data) => {
         // If data already has the correct structure, return as is
-        if (data && typeof data === 'object' && 'code' in data) {
+        if (data && typeof data === 'object' && 'message' in data) {
           return data as ApiResponse<T>;
         }
 
         // Otherwise, wrap the data in the standard response format
         return {
-          code: StatusCode.SUCCESS,
-          message: StatusMessages[StatusCode.SUCCESS],
+          message: 'Success',
           data: data,
         };
       }),
