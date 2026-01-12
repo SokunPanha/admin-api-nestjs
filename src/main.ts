@@ -84,10 +84,6 @@ async function bootstrap() {
     { encoding: 'utf8' }
   );
 
-  console.log('Swagger JSON: http://localhost:3000/admin/v1/api-docs/json');
-  console.log('Swagger YAML: http://localhost:3000/admin/v1/api-docs/yaml');
-  console.log('Swagger UI: http://localhost:3000/admin/v1/api-docs');
-
   await app.listen(process.env.PORT ?? 3001);   
 }
 bootstrap();
